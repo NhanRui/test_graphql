@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../graphql_operation/queries/readRepositories.dart' as queries;
-import '../local.dart';
 
 class FetchMoreWidgetScreen extends StatelessWidget {
   // ignore: use_key_in_widget_constructors
@@ -10,27 +9,8 @@ class FetchMoreWidgetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final httpLink = HttpLink('https://api.github.com/graphql');
-
-    final authLink = AuthLink(
-      // ignore: undefined_identifier
-      getToken: () => 'Bearer $YOUR_PERSONAL_ACCESS_TOKEN',
-    );
-
-    final link = authLink.concat(httpLink);
-
-    final client = ValueNotifier<GraphQLClient>(
-      GraphQLClient(
-        cache: GraphQLCache(),
-        link: link,
-      ),
-    );
-
-    return GraphQLProvider(
-      client: client,
-      child: const CacheProvider(
-        child: MyHomePage(title: 'GraphQL Pagination'),
-      ),
+    return const CacheProvider(
+      child: MyHomePage(title: 'GraphQL Pagination'),
     );
   }
 }
@@ -75,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               keyboardType: TextInputType.text,
               onSubmitted: changeQuery,
+              autofillHints: ['Flutter'],
             ),
             Query(
               options: QueryOptions(

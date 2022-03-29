@@ -5,36 +5,13 @@ import '../graphql_operation/mutations/mutations.dart' as mutations;
 import '../graphql_operation/queries/readRepositories.dart' as queries;
 import '../helpers.dart' show withGenericHandling;
 
-// to run the example, replace <YOUR_PERSONAL_ACCESS_TOKEN> with your GitHub token in ../local.dart
-import '../local.dart';
-
 class GraphQLWidgetScreen extends StatelessWidget {
   const GraphQLWidgetScreen() : super();
 
   @override
   Widget build(BuildContext context) {
-    final httpLink = HttpLink(
-      'https://api.github.com/graphql',
-    );
-
-    final authLink = AuthLink(
-      getToken: () async => 'Bearer $YOUR_PERSONAL_ACCESS_TOKEN',
-    );
-
-    var link = authLink.concat(httpLink);
-
-    final client = ValueNotifier<GraphQLClient>(
-      GraphQLClient(
-        cache: GraphQLCache(),
-        link: link,
-      ),
-    );
-
-    return GraphQLProvider(
-      client: client,
-      child: const CacheProvider(
-        child: MyHomePage(title: 'GraphQL Widget'),
-      ),
+    return const CacheProvider(
+      child: MyHomePage(title: 'GraphQL Widget'),
     );
   }
 }
@@ -194,7 +171,7 @@ class StarrableRepository extends StatelessWidget {
       ),
       builder: (RunMutation _addStar, QueryResult? addResult) {
         final addStar = () => _addStar({'starrableId': repository['id']},
-            optimisticResult: expectedResult(true));
+            optimisticResult: expectedResult(false));
         return Mutation(
           options: MutationOptions(
             document: gql(mutations.removeStar),
@@ -207,7 +184,7 @@ class StarrableRepository extends StatelessWidget {
           builder: (RunMutation _removeStar, QueryResult? removeResult) {
             final removeStar = () => _removeStar(
                 {'starrableId': repository['id']},
-                optimisticResult: expectedResult(false));
+                optimisticResult: expectedResult(true));
 
             final anyLoading =
                 addResult!.isLoading || removeResult!.isLoading || optimistic;
